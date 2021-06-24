@@ -2,7 +2,7 @@ import torch
 from transformers import BertTokenizer
 
 tokenizers = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
-from torch.utils.data import Dataset
+#from torch.utils.data import Dataset
 
 
 class IMDBDataset:
