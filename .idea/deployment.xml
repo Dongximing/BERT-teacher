@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="dongx34@ibis.cs.umanitoba.ca:22" remoteFilesAllowedToDisappearOnAutoupload="false" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="dongx34@ibis.cs.umanitoba.ca:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/dongx34" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="dongx34@ibis.cs.umanitoba.ca:22 (2)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/dongx34" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="dongx34@ibis.cs.umanitoba.ca:22 (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/dongx34" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
