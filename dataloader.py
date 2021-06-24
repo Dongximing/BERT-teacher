@@ -1,6 +1,6 @@
 import torch
 from transformers import BertTokenizer
-
+#123
 tokenizers = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
 #from torch.utils.data import Dataset
 
