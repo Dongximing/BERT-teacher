@@ -17,7 +17,7 @@ import train
 from model import BERTGRUSentiment
 from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
-
+from earlystopping import EarlyStopping
 from functools import partial
 configs.seed_torch()
 from ray import tune
@@ -86,10 +86,12 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
          'eps': 1e-8}
     ]
     optimizer = AdamW(grouped_model_parameters)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.01)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     best_loss = float('inf')
+    patience = 3
+    early_stopping = EarlyStopping(patience, verbose=True)
     for epoch in range (configs.EPOCHS):
 
         train_loss, train_acc = train.train_fc(train_data_loader, model, optimizer, device, lr_scheduler,criterion)
@@ -102,6 +104,12 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
             torch.save((model.state_dict(), optimizer.state_dict()), path)
 
         tune.report(loss=valid_loss, accuracy=valid_acc)
+        early_stopping(valid_loss, model)
+
+        if early_stopping.early_stop:
+
+           print("Early stopping")
+           break
 
 
 #         if valid_loss < best_loss:
@@ -112,17 +120,17 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 
 def main():
-    max_num_epochs = 10
-    num_samples =1
+    max_num_epochs = 15
+    num_samples =6
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
     checkpoint_dir = configs.MODEL_PATH
 
     config = {
-         "hidden_dim": tune.choice([128]),
+         "hidden_dim": tune.choice([128,256]),
 
-         "batch_size": tune.choice([16])
+         "batch_size": tune.choice([16,8,32])
 
     }
     scheduler = ASHAScheduler(

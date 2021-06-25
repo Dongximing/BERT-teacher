@@ -30,7 +30,7 @@ def train_fc(data_loader, model, optimizer, device, scheduler, criterion):
     epoch_loss = 0
     epoch_acc = 0
 
-    for bi, d in tqdm(enumerate(data_loader), total=len(data_loader)):
+    for  d in enumerate(data_loader):
         ids = d["ids"]
 
         mask = d["mask"]
@@ -65,7 +65,7 @@ def eval_fc(valid_loader, model, device, criterion):
     epoch_loss = 0
     epoch_acc = 0
     with torch.no_grad():
-        for bi, d in tqdm(enumerate(valid_loader), total=len(valid_loader)):
+        for d in enumerate(valid_loader):
             ids = d["ids"]
 
             mask = d["mask"]
