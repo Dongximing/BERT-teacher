@@ -80,8 +80,8 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if not any(identifier in name for identifier in bert_identifiers)],
-         'lr': CUSTOM_LEARNING_RATE,
-         'betas': BETAS,
+         'lr':1e-3,
+         'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8}
     ]
@@ -113,7 +113,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 
 def main():
     max_num_epochs = 10
-    num_samples =3
+    num_samples =1
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
@@ -122,7 +122,7 @@ def main():
     config = {
          "hidden_dim": tune.choice([128]),
 
-         "batch_size": tune.choice([32,16])
+         "batch_size": tune.choice([16])
 
     }
     scheduler = ASHAScheduler(
