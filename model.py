@@ -10,6 +10,7 @@ class BERTGRUSentiment(nn.Module):
         self.bert = bert
 
         embedding_dim = bert.config.to_dict()['hidden_size']
+        self.LSTM = nn.LSTM(embedding_dim,hidden_dim,num_layers=n_layers,dropout=dropout, bidirectional=bidirectional,batch_first=True)
 
         self.rnn = nn.GRU(embedding_dim,
                           hidden_dim,
@@ -30,8 +31,8 @@ class BERTGRUSentiment(nn.Module):
             embedded = self.dropout(self.bert(ids, attention_mask=mask)[0])
 
         # embedded = [batch size, sent len, emb dim]
-
-        _, hidden = self.rnn(embedded)
+        output,(hidden,ct) = self.LSTM(embedded)
+        #_, hidden = self.rnn(embedded)
         # print(hidden.shape)
 
         # hidden = [n layers * n directions, batch size, emb dim]

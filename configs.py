@@ -28,5 +28,5 @@ OUTPUT_DIM =1
 N_LAYERS =2
 BIDIRECTIONAL = True
 DROPOUT = 0.25
-EPOCHS = 8
+EPOCHS = 10
 MODEL_PATH ='/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/checkpoints/'

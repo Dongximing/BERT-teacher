@@ -50,8 +50,8 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
                          configs.BIDIRECTIONAL,
                          configs.DROPOUT)
     model.to(device)
-    for param in model.bert.parameters():
-      param.requires_grad = False
+#     for param in model.bert.parameters():
+#       param.requires_grad = False
 
 
     #--------#
@@ -60,7 +60,32 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
             os.path.join(checkpoint_dir, "checkpoint"))
         model.load_state_dict(model_state)
         optimizer.load_state_dict(optimizer_state)
-    optimizer = AdamW(model.parameters(), lr=config["lr"])
+
+    bert_identifiers = ['embedding', 'encoder', 'pooler']
+    no_weight_decay_identifiers = ['bias', 'LayerNorm.weight']
+    grouped_model_parameters = [
+        {'params': [param for name, param in model.named_parameters()
+                    if any(identifier in name for identifier in bert_identifiers) and
+                    not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
+         'lr': 3e-5 ,
+         'betas': (0.9, 0.999),
+         'weight_decay': 0.01 ,
+         'eps': 1e-8},
+        {'params': [param for name, param in model.named_parameters()
+                    if any(identifier in name for identifier in bert_identifiers) and
+                    any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
+         'lr': 3e-5,
+         'betas': (0.9, 0.999),
+         'weight_decay': 0.0,
+         'eps': 1e-8},
+        {'params': [param for name, param in model.named_parameters()
+                    if not any(identifier in name for identifier in bert_identifiers)],
+         'lr': CUSTOM_LEARNING_RATE,
+         'betas': BETAS,
+         'weight_decay': 0.0,
+         'eps': 1e-8}
+    ]
+    optimizer = AdamW(grouped_model_parameters)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.01)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
@@ -87,24 +112,24 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 
 def main():
-    max_num_epochs = 7
-    num_samples =8
+    max_num_epochs = 10
+    num_samples =3
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
     checkpoint_dir = configs.MODEL_PATH
 
     config = {
-         "hidden_dim": tune.choice([128,256]),
-         "lr" : tune.choice([1e-3]),
-         "batch_size": tune.choice([32,64,128])
+         "hidden_dim": tune.choice([128]),
+
+         "batch_size": tune.choice([32,16])
 
     }
     scheduler = ASHAScheduler(
         metric="loss",
         mode="min",
         max_t=max_num_epochs,
-        grace_period=1,
+        grace_period=5,
         reduction_factor=2)
     reporter = CLIReporter(
         parameter_columns=["hidden_dim", "lr", "batch_size"],
