@@ -128,7 +128,7 @@ def main():
     checkpoint_dir = configs.MODEL_PATH
 
     config = {
-         "hidden_dim": tune.choice([256]),
+         "hidden_dim": tune.choice([256,128]),
 
          "batch_size": tune.choice([16,8,32])
 
