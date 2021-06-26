@@ -9,7 +9,9 @@ import torch
 # t = torch.randn(2,10)
 # print(t)
 # print(t[0])
-a = []
+a = [1,2,3]
+print(len(a))
+
 k = [[1,3,4,50,0,0],[1,2,3,4,5,0]]
 k = torch.tensor(k)
 for i in range(len(k)):
@@ -17,13 +19,16 @@ for i in range(len(k)):
         k[i].tolist().index(0)
         if 0 in k[i].tolist() else len(k)- 1
     )
-a = torch.tensor(a)
-a = a.repeat(1,4)
+
+a = torch.tensor(a).unsqueeze(1)
 print(a)
-a = a.view(-1, 1,4)
-print(a.shape)
-print(a)
-# print(t[0,-5:])
+print((a-1))
+# a = a.repeat(1,4)
+# print(a)
+# a = a.view(-1, 1,4)
+# print(a.shape)
+# print(a)
+# # print(t[0,-5:])
 # import torch
 # from torch import LongTensor
 # from torch.nn import Embedding, LSTM
