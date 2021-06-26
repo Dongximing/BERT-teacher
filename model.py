@@ -25,10 +25,7 @@ class BERTGRUSentiment(nn.Module):
 
     def forward(self, ids, mask):
 
-        # text = [batch size, sent len]
-
-        with torch.no_grad():
-            embedded = self.dropout(self.bert(ids, attention_mask=mask)[0])
+        embedded = self.dropout(self.bert(ids, attention_mask=mask)[0])
 
         # embedded = [batch size, sent len, emb dim]
         output,(hidden,ct) = self.LSTM(embedded)

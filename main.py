@@ -121,14 +121,14 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 
 def main():
     max_num_epochs = 15
-    num_samples =6
+    num_samples =4
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
     checkpoint_dir = configs.MODEL_PATH
 
     config = {
-         "hidden_dim": tune.choice([256,128]),
+         "hidden_dim": tune.choice([128]),
 
          "batch_size": tune.choice([16,8,32])
 
@@ -137,7 +137,7 @@ def main():
         metric="loss",
         mode="min",
         max_t=max_num_epochs,
-        grace_period=5,
+        grace_period=10,
         reduction_factor=2)
     reporter = CLIReporter(
         parameter_columns=["hidden_dim", "lr", "batch_size"],
