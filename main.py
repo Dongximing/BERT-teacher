@@ -90,7 +90,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     best_loss = float('inf')
-    patience = 3
+    patience = 5
     early_stopping = EarlyStopping(patience, verbose=True)
     for epoch in range (configs.EPOCHS):
 
