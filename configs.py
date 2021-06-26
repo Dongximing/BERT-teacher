@@ -26,4 +26,4 @@ N_LAYERS =2
 BIDIRECTIONAL = True
 DROPOUT = 0.25
 EPOCHS = 15
-MODEL_PATH ='/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/checkpoints/'
+MODEL_PATH ='/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/bert.pt'
