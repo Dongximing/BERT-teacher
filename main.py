@@ -67,30 +67,30 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr':2e-5 ,
+         'lr':1e-5 ,
          'betas': (0.9, 0.999),
          'weight_decay': 0.01 ,
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr': 2e-5,
+         'lr': 1e-5,
          'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if not any(identifier in name for identifier in bert_identifiers)],
-         'lr':3e-4,
+         'lr':1e-4,
          'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8}
     ]
     optimizer = AdamW(grouped_model_parameters)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     best_loss = float('inf')
-    patience = 5
+    patience = 3
     early_stopping = EarlyStopping(patience, verbose=True)
     for epoch in range (configs.EPOCHS):
 
@@ -120,8 +120,8 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 
 def main():
-    max_num_epochs = 15
-    num_samples =4
+    max_num_epochs = 8
+    num_samples =3
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
@@ -130,14 +130,15 @@ def main():
     config = {
          "hidden_dim": tune.choice([128,256]),
 
-         "batch_size": tune.choice([16,8])
+
+         "batch_size": tune.choice([16])
 
     }
     scheduler = ASHAScheduler(
         metric="loss",
         mode="min",
         max_t=max_num_epochs,
-        grace_period=10,
+        grace_period=3,
         reduction_factor=2)
     reporter = CLIReporter(
         parameter_columns=["hidden_dim", "lr", "batch_size"],
