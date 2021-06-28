@@ -67,26 +67,26 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr':1e-6 ,
+         'lr':5e-6 ,
          'betas': (0.9, 0.999),
          'weight_decay': 0.01 ,
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr': 1e-6,
+         'lr': 5e-6,
          'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if not any(identifier in name for identifier in bert_identifiers)],
-         'lr':1e-4,
+         'lr':1e-3,
          'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8}
     ]
     optimizer = AdamW(grouped_model_parameters)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     patience = 3

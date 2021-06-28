@@ -1,28 +1,68 @@
-
-# for i in range(8):
-#     print(i+2)
-# def convert(lst):
-#     return ' '.join(lst.split())
-# lst =  'Hello Geeks for geeks'
-# print( convert(lst))
-import torch
-# t = torch.randn(2,10)
-# print(t)
-# print(t[0])
-a = [1,2,3]
-print(len(a))
-
-k = [[1,3,4,50,0,0],[1,2,3,4,5,0]]
-k = torch.tensor(k)
-for i in range(len(k)):
-    a.append(
-        k[i].tolist().index(0)
-        if 0 in k[i].tolist() else len(k)- 1
-    )
-
-a = torch.tensor(a).unsqueeze(1)
+#
+# # for i in range(8):
+# #     print(i+2)
+# # def convert(lst):
+# #     return ' '.join(lst.split())
+# # lst =  'Hello Geeks for geeks'
+# # print( convert(lst))
+# import torch
+# # t = torch.randn(2,10)
+# # print(t)
+# # print(t[0])
+# a = [1,2,3]
+# print(len(a))
+#
+# k = [[1,3,4,50,0,0],[1,2,3,4,5,0]]
+# k = torch.tensor(k)
+# for i in range(len(k)):
+#     a.append(
+#         k[i].tolist().index(0)
+#         if 0 in k[i].tolist() else len(k)- 1
+#     )
+#
+# a = torch.tensor(a).unsqueeze(1)
+# print(a)
+# print((a-1))
+def convert(lst):
+    # print(lst)
+    return ([i for item in lst for i in item.split()])
+re = ['I love u becasue','i thanks very much for u come']
+a = re[1]
 print(a)
-print((a-1))
+a = a.split()
+
+a = convert(a)
+if len(a) >5:
+    a = a[:2]+a[-3:]
+a = ' '.join([str(elem) for elem in a])
+print(a)
+
+from transformers import BertTokenizer, BertModel
+
+
+tokenizers = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+a =tokenizers.encode_plus(a,None,add_special_tokens=True)
+print(a)
+import torch
+bert = BertModel.from_pretrained('bert-base-uncased')
+current_states_dict = bert.state_dict()
+for index,param in enumerate(current_states_dict.keys()):
+    print("/n")
+    print(param)
+    print("/n")
+    print(index)
+    print("/n")
+    print(current_states_dict[param].shape)
+
+
+
+# re = convert(re)
+# print(re)
+# review = ['a','b','c','d','r','t']
+# if len(a) >5:
+#     review = a[:2]+a[-3:]
+# print(a)
+
 # a = a.repeat(1,4)
 # print(a)
 # a = a.view(-1, 1,4)

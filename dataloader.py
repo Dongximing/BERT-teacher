@@ -3,7 +3,9 @@ from transformers import BertTokenizer
 #123
 tokenizers = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
 #from torch.utils.data import Dataset
-
+def convert(lst):
+    # print(lst)
+    return ([i for item in lst for i in item.split()])
 
 class IMDBDataset:
     def __init__(self, review, target):
@@ -17,6 +19,12 @@ class IMDBDataset:
     def __getitem__(self, item):
         review = str(self.review[item])
         review = " ".join(review.split())
+        review = review.split()
+        review = convert(review)
+        if len(review) > 512:
+            review = review[:128] + review[-382:]
+        review = ' '.join([str(elem) for elem in review])
+
         inputs = self.tokenizer.encode_plus(review, None,
                                             add_special_tokens=True,
                                             max_length=512,
