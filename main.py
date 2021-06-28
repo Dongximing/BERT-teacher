@@ -67,14 +67,14 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr':1e-5 ,
+         'lr':1e-6 ,
          'betas': (0.9, 0.999),
          'weight_decay': 0.01 ,
          'eps': 1e-8},
         {'params': [param for name, param in model.named_parameters()
                     if any(identifier in name for identifier in bert_identifiers) and
                     any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr': 1e-5,
+         'lr': 1e-6,
          'betas': (0.9, 0.999),
          'weight_decay': 0.0,
          'eps': 1e-8},
