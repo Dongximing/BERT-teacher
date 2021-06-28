@@ -89,7 +89,6 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
-    best_loss = float('inf')
     patience = 3
     early_stopping = EarlyStopping(patience, verbose=True)
     for epoch in range (configs.EPOCHS):
