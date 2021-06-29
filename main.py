@@ -86,7 +86,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
          'eps': 1e-8}
     ]
     optimizer = AdamW(grouped_model_parameters)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.01)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     patience = 3
@@ -140,7 +140,7 @@ def main():
         grace_period=3,
         reduction_factor=2)
     reporter = CLIReporter(
-        parameter_columns=["hidden_dim", "lr", "batch_size"],
+        parameter_columns=["hidden_dim", "batch_size"],
         metric_columns=["loss", "accuracy", "training_iteration"])
     result = tune.run(
         partial(train_titanic, checkpoint_dir=checkpoint_dir, train_dir=train_dir, valid_dir= valid_dir),
