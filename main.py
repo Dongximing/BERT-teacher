@@ -86,7 +86,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
          'eps': 1e-8}
     ]
     optimizer = AdamW(grouped_model_parameters)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.01)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
     criterion = nn.BCEWithLogitsLoss()
     criterion = criterion.to(device)
     patience = 3

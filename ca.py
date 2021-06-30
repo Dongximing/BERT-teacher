@@ -46,13 +46,57 @@ print(a)
 import torch
 bert = BertModel.from_pretrained('bert-base-uncased')
 current_states_dict = bert.state_dict()
-for index,param in enumerate(current_states_dict.keys()):
-    print("/n")
-    print(param)
-    print("/n")
-    print(index)
-    print("/n")
-    print(current_states_dict[param].shape)
+print(list(current_states_dict.keys()))
+print("/n")
+import torch.nn as nn
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+
+
+        self.fc2 = nn.Linear(6, 3)
+        self.fc3 = nn.Linear(3, 1)
+
+    def forward(self, x):
+
+        x = x.view(-1, 16 * 5 * 5)
+
+        x = self.fc2(x)
+        x = self.fc3(x)
+        return x
+net = Net()
+
+f = net.state_dict()
+print(f.keys())
+print("/n")
+print(f.values())
+print("/n")
+d = list(f.values())[0:]
+c = list(f.values())[1:]
+
+#
+b = list(f.values())[0:][0]
+k = list(f.values())[0:][1]
+print(d)
+print("/n")
+print(c)
+
+print("/n")
+print(b)
+print("/n")
+print(k)
+print("/n")
+
+
+
+# print(torch.eq(b,c))
+# for index,param in enumerate(current_states_dict.keys()):
+#     print("/n")
+#     print(param)
+#     print("/n")
+#     print(index)
+#     print("/n")
+#     print(current_states_dict[param].shape)
 
 
 
