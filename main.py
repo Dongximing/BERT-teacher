@@ -137,7 +137,7 @@ def main():
         metric="loss",
         mode="min",
         max_t=max_num_epochs,
-        grace_period=3,
+        grace_period=2,
         reduction_factor=2)
     reporter = CLIReporter(
         parameter_columns=["hidden_dim", "batch_size"],
