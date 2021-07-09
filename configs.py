@@ -21,7 +21,7 @@ def seed_torch(seed=1234):
 
 
 
-OUTPUT_DIM =1
+OUTPUT_DIM =2
 N_LAYERS =2
 BIDIRECTIONAL = True
 DROPOUT = 0.25

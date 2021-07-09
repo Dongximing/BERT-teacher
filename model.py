@@ -24,8 +24,9 @@ class BERTGRUSentiment(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, ids, mask):
+        with torch.no_grad():
 
-        embedded = self.dropout(self.bert(ids, attention_mask=mask)[0])
+            embedded = self.dropout(self.bert(ids, attention_mask=mask)[0])
 
         # embedded = [batch size, sent len, emb dim]
         output,(hidden,ct) = self.LSTM(embedded)

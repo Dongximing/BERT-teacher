@@ -10,7 +10,14 @@ from torch.autograd import Variable
 import matplotlib.pyplot as plt
 from torch.optim import lr_scheduler
 from transformers import BertTokenizer, BertModel
-
+def categorical_accuracy(preds, y):
+    """
+    Returns accuracy per batch, i.e. if you get 8/10 right, this returns 0.8, NOT 8
+    """
+    top_pred = preds.argmax(1, keepdim = True)
+    correct = top_pred.eq(y.view_as(top_pred)).sum()
+    acc = correct.float() / y.shape[0]
+    return acc
 
 def binary_accuracy(preds, y):
     rounded_preds = torch.round(torch.sigmoid(preds))
@@ -39,7 +46,7 @@ def train_fc(data_loader, model, optimizer, device, scheduler, criterion):
         ids = ids.to(device, dtype=torch.long)
 
         mask = mask.to(device, dtype=torch.long)
-        targets = targets.to(device, dtype=torch.float).unsqueeze(1)
+        targets = targets.to(device, dtype=torch.long)
 
 
         optimizer.zero_grad()
@@ -48,7 +55,7 @@ def train_fc(data_loader, model, optimizer, device, scheduler, criterion):
 
 
         loss = criterion(outputs, targets)
-        acc = binary_accuracy(outputs, targets)
+        acc = categorical_accuracy(outputs, targets)
         loss.backward()
         # torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()

@@ -53,6 +53,10 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #     for param in model.bert.parameters():
 #       param.requires_grad = False
 
+for name, param in model.named_parameters():
+    if name.startswith('bert'):
+        param.requires_grad = False
+
 
     #--------#
     if checkpoint_dir:
@@ -61,33 +65,35 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
         model.load_state_dict(model_state)
         optimizer.load_state_dict(optimizer_state)
 
-    bert_identifiers = ['embedding', 'encoder', 'pooler']
-    no_weight_decay_identifiers = ['bias', 'LayerNorm.weight']
-    grouped_model_parameters = [
-        {'params': [param for name, param in model.named_parameters()
-                    if any(identifier in name for identifier in bert_identifiers) and
-                    not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr':5e-6 ,
-         'betas': (0.9, 0.999),
-         'weight_decay': 0.01 ,
-         'eps': 1e-8},
-        {'params': [param for name, param in model.named_parameters()
-                    if any(identifier in name for identifier in bert_identifiers) and
-                    any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
-         'lr': 5e-6,
-         'betas': (0.9, 0.999),
-         'weight_decay': 0.0,
-         'eps': 1e-8},
-        {'params': [param for name, param in model.named_parameters()
-                    if not any(identifier in name for identifier in bert_identifiers)],
-         'lr':1e-3,
-         'betas': (0.9, 0.999),
-         'weight_decay': 0.0,
-         'eps': 1e-8}
-    ]
-    optimizer = AdamW(grouped_model_parameters)
+#     bert_identifiers = ['embedding', 'encoder', 'pooler']
+#     no_weight_decay_identifiers = ['bias', 'LayerNorm.weight']
+#     grouped_model_parameters = [
+#         {'params': [param for name, param in model.named_parameters()
+#                     if any(identifier in name for identifier in bert_identifiers) and
+#                     not any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
+#          'lr':5e-6 ,
+#          'betas': (0.9, 0.999),
+#          'weight_decay': 0.01 ,
+#          'eps': 1e-8},
+#         {'params': [param for name, param in model.named_parameters()
+#                     if any(identifier in name for identifier in bert_identifiers) and
+#                     any(identifier_ in name for identifier_ in no_weight_decay_identifiers)],
+#          'lr': 5e-6,
+#          'betas': (0.9, 0.999),
+#          'weight_decay': 0.0,
+#          'eps': 1e-8},
+#         {'params': [param for name, param in model.named_parameters()
+#                     if not any(identifier in name for identifier in bert_identifiers)],
+#          'lr':1e-3,
+#          'betas': (0.9, 0.999),
+#          'weight_decay': 0.0,
+#          'eps': 1e-8}
+#     ]
+#     optimizer = AdamW(grouped_model_parameters)
+#     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
+    optimizer = AdamW(model.parameters(),lr = 1e-3)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.CrossEntropyLoss()
     criterion = criterion.to(device)
     patience = 3
     early_stopping = EarlyStopping(patience, verbose=True)
@@ -119,18 +125,18 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 
 def main():
-    max_num_epochs = 8
-    num_samples =3
+    max_num_epochs = 10
+    num_samples =1
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
     valid_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/valid.csv'
     checkpoint_dir = configs.MODEL_PATH
 
     config = {
-         "hidden_dim": tune.choice([128,256]),
+         "hidden_dim": tune.choice([256]),
 
 
-         "batch_size": tune.choice([16])
+         "batch_size": tune.choice([128])
 
     }
     scheduler = ASHAScheduler(
@@ -155,7 +161,7 @@ def main():
 
     print("Best trial config: {}".format(best_trial.config))
     print("Best trial final validation loss: {}".format(
-        best_trial.last_result["loss"]))
+        best_trial.best_result["loss"]))
     print("Best trial final validation accuracy: {}".format(
         best_trial.last_result["accuracy"]))
 
