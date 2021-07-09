@@ -81,14 +81,14 @@ def eval_fc(valid_loader, model, device, criterion):
             ids = ids.to(device, dtype=torch.long)
 
             mask = mask.to(device, dtype=torch.long)
-            targets = targets.to(device, dtype=torch.float).unsqueeze(1)
+            targets = targets.to(device, dtype=torch.long)
 
             outputs = model(ids=ids, mask=mask)
             loss = criterion(outputs, targets)
 
             # fin_targets.extend(targets.cpu().detach().numpy().tolist())
             # fin_outputs.extend(torch.sigmoid(outputs).cpu().detach().numpy().tolist())
-            acc = binary_accuracy(outputs, targets)
+            acc =categorical_accuracy(outputs, targets)
             epoch_loss += loss.item()
             epoch_acc += acc.item()
     return epoch_loss / len(valid_loader), epoch_acc / len(valid_loader)

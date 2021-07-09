@@ -53,9 +53,9 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #     for param in model.bert.parameters():
 #       param.requires_grad = False
 
-for name, param in model.named_parameters():
-    if name.startswith('bert'):
-        param.requires_grad = False
+    for name, param in model.named_parameters():
+        if name.startswith('bert'):
+            param.requires_grad = False
 
 
     #--------#
