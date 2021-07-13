@@ -92,7 +92,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #     optimizer = AdamW(grouped_model_parameters)
 #     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
     optimizer = AdamW(model.parameters(),lr = 1e-3)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.01)
     criterion = nn.CrossEntropyLoss()
     criterion = criterion.to(device)
     patience = 3
@@ -125,7 +125,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 
 def main():
-    max_num_epochs = 10
+    max_num_epochs = 15
     num_samples =1
 
     train_dir = '/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/train.csv'
