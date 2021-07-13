@@ -36,5 +36,5 @@ class IMDBDataset:
             "ids": torch.tensor(ids, dtype=torch.long),
             "mask": torch.tensor(mask, dtype=torch.long),
 
-            "targets": torch.tensor(self.target[item], dtype=torch.float)
+            "targets": torch.tensor(self.target[item], dtype=torch.long)
         }

@@ -92,7 +92,7 @@ def train_titanic(config,checkpoint_dir=None,train_dir=None,valid_dir=None):
 #     optimizer = AdamW(grouped_model_parameters)
 #     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.01)
     optimizer = AdamW(model.parameters(),lr = 1e-3)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.01)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
     criterion = nn.CrossEntropyLoss()
     criterion = criterion.to(device)
     patience = 3
