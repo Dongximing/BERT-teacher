@@ -3,6 +3,8 @@ from transformers import BertTokenizer
 #123
 tokenizers = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
 #from torch.utils.data import Dataset
+import configs
+configs.seed_torch()
 def convert(lst):
     # print(lst)
     return ([i for item in lst for i in item.split()])

@@ -25,5 +25,5 @@ OUTPUT_DIM =2
 N_LAYERS =2
 BIDIRECTIONAL = True
 DROPOUT = 0.25
-EPOCHS = 15
+EPOCHS = 5
 MODEL_PATH ='/home/dongxx/projects/def-mercer/dongxx/project/pythonProject/bert.pt'
